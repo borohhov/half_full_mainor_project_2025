@@ -16,6 +16,25 @@ class ConsumptionScreenState extends State<ConsumptionScreen> {
   DayConsumptionController controller = DayConsumptionController();
   final GlobalKey<WaterBottleState> _bottleKey = GlobalKey();
 
+  void _handleAdd(double amount) {
+    setState(() {
+      final remaining = controller.remainingToDrink();
+      if (remaining == 0) {
+        return;
+      }
+      final bottleLevel = amount / remaining;
+      controller.addConsumption(amount);
+      _bottleKey.currentState?.addWater(bottleLevel);
+    });
+  }
+
+  Widget _buildAddButton(double amount) {
+    return ElevatedButton(
+      onPressed: () => _handleAdd(amount),
+      child: Text("Add ${formatNumberToLiter(amount)}"),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,24 +56,8 @@ class ConsumptionScreenState extends State<ConsumptionScreen> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        double bottleLevel = 0.25 / controller.remainingToDrink();
-                        controller.addConsumption(0.25);
-                        _bottleKey.currentState?.addWater(bottleLevel);
-                      });
-                    },
-                    child: Text("Add ${formatNumberToLiter(0.25)}")),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        double bottleLevel = 0.5 / controller.remainingToDrink();
-                        controller.addConsumption(0.5);
-                        _bottleKey.currentState?.addWater(bottleLevel);
-                      });
-                    },
-                    child: Text("Add ${formatNumberToLiter(0.5)}"))
+                _buildAddButton(0.25),
+                _buildAddButton(0.5)
               ],
             )
           ],
