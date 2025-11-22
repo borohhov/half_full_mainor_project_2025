@@ -3,8 +3,8 @@ import '../models/day_consumption.dart';
 DayConsumption exampleDayConsumption = DayConsumption(DateTime.now(), 0, 2);
 
 class DayConsumptionController {
-  void addConsumption() {
-    exampleDayConsumption.consumption += 0.25;
+  void addConsumption(double consumption) {
+    exampleDayConsumption.consumption += consumption;
   }
 
   double remainingToDrink() {
