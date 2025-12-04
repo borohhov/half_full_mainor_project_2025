@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:half_full/controllers/profile_controller.dart';
 import 'package:half_full/views/consumption_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => ProfileController(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

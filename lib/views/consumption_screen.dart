@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:half_full/utils/conversion.dart';
+import 'package:provider/provider.dart';
 import '../controllers/day_consumption_controller.dart';
 import '../controllers/profile_controller.dart';
 import 'bottle_view/water_bottle.dart';
@@ -15,38 +16,44 @@ class ConsumptionScreen extends StatefulWidget {
 }
 
 class ConsumptionScreenState extends State<ConsumptionScreen> {
-  late final DayConsumptionController controller;
-  final ProfileController _profileController = ProfileController();
+  late DayConsumptionController _controller;
   final GlobalKey<WaterBottleState> _bottleKey = GlobalKey();
+  ProfileController? _profileController;
+  bool _initialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    controller = DayConsumptionController(profileController: _profileController);
-    _profileController.addListener(_handleProfileChange);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _profileController = Provider.of<ProfileController>(context, listen: false)
+      ..addListener(_handleProfileChange);
+    _controller =
+        DayConsumptionController(profileController: _profileController);
+    _initialized = true;
+    _handleProfileChange();
   }
 
   @override
   void dispose() {
-    _profileController.removeListener(_handleProfileChange);
-    controller.dispose();
+    _profileController?.removeListener(_handleProfileChange);
+    _controller.dispose();
     super.dispose();
   }
 
   void _handleAdd(double amount) {
     setState(() {
-      final remaining = controller.remainingToDrink();
+      final remaining = _controller.remainingToDrink();
       if (remaining == 0) {
         return;
       }
       final bottleLevel = amount / remaining;
-      controller.addConsumption(amount);
+      _controller.addConsumption(amount);
       _bottleKey.currentState?.addWater(bottleLevel);
     });
   }
 
   void _handleProfileChange() {
-    final consumption = controller.getConsumption();
+    final consumption = _controller.getConsumption();
     final ratio = consumption.dayGoal == 0
         ? 0.0
         : consumption.consumption / consumption.dayGoal;
@@ -89,11 +96,11 @@ class ConsumptionScreenState extends State<ConsumptionScreen> {
               width: 120,
               height: 260,
             ),
-            Text(formatNumberToLiter(controller.getConsumption().consumption)),
+            Text(formatNumberToLiter(_controller.getConsumption().consumption)),
             Text("Remaining to drink for the day:"),
-            Text(formatNumberToLiter(controller.remainingToDrink())),
+            Text(formatNumberToLiter(_controller.remainingToDrink())),
             Text(
-              "Today's goal: ${formatNumberToLiter(controller.getConsumption().dayGoal)}",
+              "Today's goal: ${formatNumberToLiter(_controller.getConsumption().dayGoal)}",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Row(
