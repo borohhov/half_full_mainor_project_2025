@@ -39,18 +39,18 @@ class Profile {
       Climate.hot => 0.25,
     };
 
-    final result = base + genderAdjustment + heightAdjustment + climateAdjustment;
+    final double result =
+        base + genderAdjustment + heightAdjustment + climateAdjustment;
     if (result < 1.5) {
       return 1.5;
     }
-    return double.parse(result.toStringAsFixed(2));
+    return ((result * 10).roundToDouble()) / 10;
   }
 }
 
 enum Gender {
-  male, female;
+  male,
+  female;
 }
 
-enum Climate {
-  cold, temperate, hot
-}
+enum Climate { cold, temperate, hot }
