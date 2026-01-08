@@ -5,4 +5,3 @@ class DayConsumption {
 
   DayConsumption(this.dateTime, this.consumption, this.dayGoal);
 }
-

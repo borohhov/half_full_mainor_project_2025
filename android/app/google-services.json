@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215515104048",
+    "project_id": "mainor-2026-spring-half-full",
+    "storage_bucket": "mainor-2026-spring-half-full.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215515104048:android:5b42f6835e00d534e67ef5",
+        "android_client_info": {
+          "package_name": "com.mainor.half_full.half_full"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhxgYO4FZaPVtuk8eq2trzeCCPFKGLid4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

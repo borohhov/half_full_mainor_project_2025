@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../controllers/profile_controller.dart';
 import '../models/profile.dart';
@@ -13,26 +14,33 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ProfileController _profileController = ProfileController();
+  late final ProfileController _profileController;
   late final TextEditingController _weightController;
   late final TextEditingController _heightController;
   late Gender _selectedGender;
   late Climate _selectedClimate;
+  bool _isDirty = false;
+  bool _syncingFromController = false;
 
   @override
   void initState() {
     super.initState();
+    _profileController = Provider.of<ProfileController>(context, listen: false)
+      ..addListener(_handleProfileUpdated);
     final profile = _profileController.profile;
-    _weightController = TextEditingController(text: profile.weightInKg.toString())
-      ..addListener(_handleFormChange);
-    _heightController = TextEditingController(text: profile.heightInCm.toString())
-      ..addListener(_handleFormChange);
+    _weightController =
+        TextEditingController(text: profile.weightInKg.toString())
+          ..addListener(_handleFormChange);
+    _heightController =
+        TextEditingController(text: profile.heightInCm.toString())
+          ..addListener(_handleFormChange);
     _selectedGender = profile.gender;
     _selectedClimate = profile.climate;
   }
 
   @override
   void dispose() {
+    _profileController.removeListener(_handleProfileUpdated);
     _weightController
       ..removeListener(_handleFormChange)
       ..dispose();
@@ -43,7 +51,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _handleFormChange() {
-    setState(() {});
+    if (_syncingFromController) {
+      return;
+    }
+    setState(() {
+      _isDirty = true;
+    });
+  }
+
+  void _handleProfileUpdated() {
+    if (!mounted || _profileController.isLoading || _isDirty) {
+      return;
+    }
+    final profile = _profileController.profile;
+    _syncingFromController = true;
+    _weightController.text = profile.weightInKg.toString();
+    _heightController.text = profile.heightInCm.toString();
+    _syncingFromController = false;
+    setState(() {
+      _selectedGender = profile.gender;
+      _selectedClimate = profile.climate;
+    });
   }
 
   String? _validatePositiveInt(String? value, String fieldName) {
@@ -57,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return null;
   }
 
-  void _handleSave() {
+  Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -65,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final weight = int.parse(_weightController.text);
     final height = int.parse(_heightController.text);
 
-    _profileController.saveProfile(
+    await _profileController.saveProfile(
       weightInKg: weight,
       heightInCm: height,
       gender: _selectedGender,
@@ -202,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _handleSave,
+                  onPressed: () => _handleSave(),
                   child: const Text('Save'),
                 ),
               ),

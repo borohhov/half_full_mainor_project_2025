@@ -56,7 +56,6 @@ class WaterBottleState extends State<WaterBottle> {
   }
 }
 
-
 class _BottlePainter extends CustomPainter {
   final double fillLevel; // 0.0 – 1.0
 
@@ -82,33 +81,33 @@ class _BottlePainter extends CustomPainter {
 
     // Bottle outline path
     final Path bottlePath = Path()
-    // Left neck down
+      // Left neck down
       ..moveTo(centerX - neckWidth / 2, 0)
       ..lineTo(centerX - neckWidth / 2, neckHeight)
-    // Left shoulder
+      // Left shoulder
       ..lineTo(centerX - bodyWidth / 2, bodyTopY)
-    // Left body side
+      // Left body side
       ..lineTo(centerX - bodyWidth / 2, bodyBottomY - baseRadius)
-    // Bottom left curve -> center
+      // Bottom left curve -> center
       ..quadraticBezierTo(
         centerX - bodyWidth / 2,
         bodyBottomY,
         centerX,
         bodyBottomY,
       )
-    // Bottom right curve -> right side
+      // Bottom right curve -> right side
       ..quadraticBezierTo(
         centerX + bodyWidth / 2,
         bodyBottomY,
         centerX + bodyWidth / 2,
         bodyBottomY - baseRadius,
       )
-    // Right body side up
+      // Right body side up
       ..lineTo(centerX + bodyWidth / 2, bodyTopY)
-    // Right shoulder & neck
+      // Right shoulder & neck
       ..lineTo(centerX + neckWidth / 2, neckHeight)
       ..lineTo(centerX + neckWidth / 2, 0)
-    // Top edge (cap)
+      // Top edge (cap)
       ..lineTo(centerX - neckWidth / 2, 0)
       ..close();
 
@@ -149,4 +148,3 @@ class _BottlePainter extends CustomPainter {
     return oldDelegate.fillLevel != fillLevel;
   }
 }
-
