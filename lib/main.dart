@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'controllers/profile_controller.dart';
 import 'providers/data_provider.dart';
 import 'providers/firestore_data_provider.dart';
@@ -10,6 +10,7 @@ import 'views/consumption_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   final DataProvider dataProvider = FirestoreDataProvider();
   await dataProvider.initialize();
   final AnalyticsService analyticsService = AnalyticsService();

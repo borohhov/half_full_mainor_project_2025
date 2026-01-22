@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -46,8 +47,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC2oqDI9D5qBQV4KrUPMdJagE1SPZnklZw',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_WEB']!,
     appId: '1:215515104048:web:e7f11cb2b9c3db08e67ef5',
     messagingSenderId: '215515104048',
     projectId: 'mainor-2026-spring-half-full',
@@ -55,16 +56,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'mainor-2026-spring-half-full.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBhxgYO4FZaPVtuk8eq2trzeCCPFKGLid4',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_ANDROID']!,
     appId: '1:215515104048:android:5b42f6835e00d534e67ef5',
     messagingSenderId: '215515104048',
     projectId: 'mainor-2026-spring-half-full',
     storageBucket: 'mainor-2026-spring-half-full.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDG0Z2E72gR-sVzSTmkCkLltwHWycCth1Y',
+  static final FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_IOS']!,
     appId: '1:215515104048:ios:675d5130c684f9ebe67ef5',
     messagingSenderId: '215515104048',
     projectId: 'mainor-2026-spring-half-full',
